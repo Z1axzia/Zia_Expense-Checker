@@ -1,109 +1,108 @@
 import csv
-from datetime import datetime
+import os
 
 FILE_NAME = "expenses.csv"
 
 
+def initialize_file():
+    if not os.path.exists(FILE_NAME):
+        with open(FILE_NAME, "w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Date", "Category", "Amount"])
+
+
 def add_expense():
-    try:
-        amount = float(input("Amount (¥): "))
-    except ValueError:
-        print("Invalid amount. Please enter a number.")
-        return
-
-    category = input("Category: ")
-
-    date = datetime.now().strftime("%Y-%m-%d")
+    date = input("Enter date (YYYY-MM-DD): ")
+    category = input("Enter category: ")
+    amount = input("Enter amount: ")
 
     with open(FILE_NAME, "a", newline="") as file:
         writer = csv.writer(file)
-        writer.writerow([date, amount, category])
+        writer.writerow([date, category, amount])
 
-    print("Expense added successfully!")
+    print("\n✅ Expense added successfully!")
 
 
 def view_expenses():
-    try:
-        with open(FILE_NAME, "r") as file:
-            reader = csv.reader(file)
+    print("\n===== Expense Records =====")
 
-            print("\n--- Expense Records ---")
+    with open(FILE_NAME, "r") as file:
+        reader = csv.reader(file)
 
-            for row in reader:
-                print(
-                    f"Date: {row[0]} | Amount: ¥{row[1]} | Category: {row[2]}"
-                )
-
-    except FileNotFoundError:
-        print("No expense records found.")
+        for row in reader:
+            print("{:<15} {:<15} {:<10}".format(*row))
 
 
-def total_expenses():
+def calculate_total():
     total = 0
 
-    try:
-        with open(FILE_NAME, "r") as file:
-            reader = csv.reader(file)
+    with open(FILE_NAME, "r") as file:
+        reader = csv.DictReader(file)
 
-            for row in reader:
-                total += float(row[1])
+        for row in reader:
+            total += float(row["Amount"])
 
-        print(f"\nTotal Expenses: ¥{total:.2f}")
-
-    except FileNotFoundError:
-        print("No expense records found.")
+    print(f"\n💰 Total Expenses: ¥{total:,.2f}")
 
 
-def category_summary():
-    summary = {}
+def search_category():
+    category = input("Enter category to search: ")
 
-    try:
-        with open(FILE_NAME, "r") as file:
-            reader = csv.reader(file)
+    print(f"\nResults for '{category}'")
 
-            for row in reader:
-                category = row[2]
-                amount = float(row[1])
+    found = False
 
-                if category in summary:
-                    summary[category] += amount
-                else:
-                    summary[category] = amount
+    with open(FILE_NAME, "r") as file:
+        reader = csv.DictReader(file)
 
-        print("\n--- Category Summary ---")
+        for row in reader:
+            if row["Category"].lower() == category.lower():
+                print(
+                    row["Date"],
+                    row["Category"],
+                    row["Amount"]
+                )
+                found = True
 
-        for category, amount in summary.items():
-            print(f"{category}: ¥{amount:.2f}")
-
-    except FileNotFoundError:
-        print("No expense records found.")
+    if not found:
+        print("No records found.")
 
 
-while True:
-    print("\n===== Expense Checker =====")
-    print("1. Add Expense")
-    print("2. View Expenses")
-    print("3. Total Expenses")
-    print("4. Category Summary")
-    print("5. Exit")
+def menu():
 
-    choice = input("Choose an option: ")
+    while True:
 
-    if choice == "1":
-        add_expense()
+        print("\n========================")
+        print(" Expense Management App ")
+        print("========================")
+        print("1. Add Expense")
+        print("2. View Expenses")
+        print("3. Search by Category")
+        print("4. Calculate Total")
+        print("5. Exit")
 
-    elif choice == "2":
-        view_expenses()
+        choice = input("Choose an option: ")
 
-    elif choice == "3":
-        total_expenses()
+        if choice == "1":
+            add_expense()
 
-    elif choice == "4":
-        category_summary()
+        elif choice == "2":
+            view_expenses()
 
-    elif choice == "5":
-        print("Goodbye!")
-        break
+        elif choice == "3":
+            search_category()
 
-    else:
-        print("Invalid option.")
+        elif choice == "4":
+            calculate_total()
+
+        elif choice == "5":
+            print("Goodbye!")
+            break
+
+        else:
+            print("Invalid option.")
+
+
+if __name__ == "__main__":
+    initialize_file()
+    menu()

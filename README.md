@@ -41,36 +41,6 @@ ExpenseManagementSystem/
 | 2026-06-10 | Transport | 450 |
 | 2026-06-11 | Shopping | 3000 |
 
-## How to Run
-
-1. Clone the repository
-
-```bash
-git clone https://github.com/yourusername/ExpenseManagementSystem.git
-```
-
-2. Navigate to the project folder
-
-```bash
-cd ExpenseManagementSystem
-```
-
-3. Run the application
-
-```bash
-python main.py
-```
-
-## Screenshots
-
-### Main Menu
-
-![Main Menu](screenshots/menu.png)
-
-### Expense Records
-
-![Expense Records](screenshots/expenses.png)
-
 ## Skills Demonstrated
 
 - Python Programming
@@ -87,9 +57,3 @@ python main.py
 - Monthly Expense Reports
 - Expense Categories and Budget Limits
 - Export Reports to Excel
-
-## Author
-
-Zia
-
-Aspiring Software Engineer | TOEIC 975 | JLPT N2 | Python • Java • SQL
